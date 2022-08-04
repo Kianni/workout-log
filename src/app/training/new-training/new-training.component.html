@@ -3,7 +3,8 @@
         <mat-card-title fxLayout fxLayoutAlign="center">Time to start workout!</mat-card-title>
         <mat-card-content fxLayout fxLayoutAlign="center">
             <mat-form-field>
-                <mat-select>
+                <mat-select placeholder="Choose Exercise" [(value)]="selected" [formControl]="selectTrainingControl"
+                    required>
                     <mat-option *ngFor="let exercise of availableExercises" [value]="exercise.id">
                         {{ exercise.name }}
                     </mat-option>
@@ -11,7 +12,8 @@
             </mat-form-field>
         </mat-card-content>
         <mat-card-actions fxLayout fxLayoutAlign="center">
-            <button type="submit" mat-button (click)="onStartTraining()">
+            <button type="submit" mat-button (click)="onStartTraining(selected)"
+                [disabled]="selectTrainingControl.hasError('required')">
                 Start
             </button>
         </mat-card-actions>
