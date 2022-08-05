@@ -1,41 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-training',
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit {
-  availableExercises: Observable<Exercise[]>;
+export class NewTrainingComponent implements OnInit, OnDestroy {
+  availableExercises: Exercise[];
   selected;
-  selectTrainingControl = new FormControl('', Validators.required)
+  selectTrainingControl = new FormControl('', Validators.required);
+  exerciseSubscription: Subscription;
 
-  constructor(private trainingService: TrainingService,
-    private db: AngularFirestore) { }
+  constructor(private trainingService: TrainingService) { }
 
   ngOnInit(): void {
     // this.availableExercises = this.trainingService.getExercises();
     // this.availableExercises = this.db.collection('availableExercises').valueChanges();
-    this.availableExercises = this.db
-      .collection('availableExercises')
-      .snapshotChanges()
-      .pipe(
-        map(docArray => {
-          return docArray.map(doc => {
-            const data: any = doc.payload.doc.data();
-            return {
-              id: doc.payload.doc.id,
-              ...data
-            };
-          });
-        })
-      );
+    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => (this.availableExercises = exercises));
+    this.trainingService.fetchExercises();
 
   }
 
@@ -43,5 +29,7 @@ export class NewTrainingComponent implements OnInit {
     // console.log(ex);
     this.trainingService.startExercise(ex);
   }
-
+  ngOnDestroy(): void {
+    this.exerciseSubscription.unsubscribe();
+  }
 }
