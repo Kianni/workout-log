@@ -14,13 +14,15 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   selected;
   selectTrainingControl = new FormControl('', Validators.required);
   exerciseSubscription: Subscription;
+  isLoading = true;
 
   constructor(private trainingService: TrainingService) { }
 
   ngOnInit(): void {
-    // this.availableExercises = this.trainingService.getExercises();
-    // this.availableExercises = this.db.collection('availableExercises').valueChanges();
-    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => (this.availableExercises = exercises));
+    this.exerciseSubscription = this.trainingService.exercisesChanged.subscribe(exercises => {
+      this.isLoading = false;
+      this.availableExercises = exercises;
+    });
     this.trainingService.fetchExercises();
 
   }
