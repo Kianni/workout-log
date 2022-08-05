@@ -4,6 +4,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-training',
@@ -11,7 +12,7 @@ import { TrainingService } from '../training.service';
   styleUrls: ['./new-training.component.css']
 })
 export class NewTrainingComponent implements OnInit {
-  availableExercises: Observable<any>;
+  availableExercises: Observable<Exercise[]>;
   selected;
   selectTrainingControl = new FormControl('', Validators.required)
 
@@ -20,7 +21,22 @@ export class NewTrainingComponent implements OnInit {
 
   ngOnInit(): void {
     // this.availableExercises = this.trainingService.getExercises();
-    this.availableExercises = this.db.collection('availableExercises').valueChanges();
+    // this.availableExercises = this.db.collection('availableExercises').valueChanges();
+    this.availableExercises = this.db
+      .collection('availableExercises')
+      .snapshotChanges()
+      .pipe(
+        map(docArray => {
+          return docArray.map(doc => {
+            const data: any = doc.payload.doc.data();
+            return {
+              id: doc.payload.doc.id,
+              ...data
+            };
+          });
+        })
+      );
+
   }
 
   onStartTraining(ex: any) {
