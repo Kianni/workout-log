@@ -1,54 +1,25 @@
 <section class="signup-form">
     <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" #f="ngForm" (ngSubmit)="onSubmit(f)">
         <mat-form-field>
-            <input 
-                type="email" 
-                matInput 
-                placeholder="Your email" 
-                ngModel 
-                name="email"
-                email
-                required
-                #email="ngModel"
-                >
-                <mat-error *ngIf="!email.hasError('required')">E-Mail is invalid</mat-error>
-                <mat-error *ngIf="email.value === ''">Field must not be empty</mat-error>
+            <input type="email" matInput placeholder="Your email" ngModel name="email" email required #email="ngModel">
+            <mat-error *ngIf="!email.hasError('required')">E-Mail is invalid</mat-error>
+            <mat-error *ngIf="email.value === ''">Field must not be empty</mat-error>
         </mat-form-field>
         <mat-form-field hintLabel="Should be at least 6 characters long">
-            <input 
-                type="password" 
-                matInput 
-                placeholder="Your password" 
-                ngModel 
-                name="password"
-                required
-                minlength="6"
-                #pwInput="ngModel"
-                >
-                <mat-hint align="end"> {{ pwInput.value?.length }}/ 6</mat-hint>
+            <input type="password" matInput placeholder="Your password" ngModel name="password" required minlength="6"
+                #pwInput="ngModel">
+            <mat-hint align="end"> {{ pwInput.value?.length }}/ 6</mat-hint>
         </mat-form-field>
         <mat-form-field>
-            <input 
-                [matDatepicker]="picker" 
-                matInput 
-                placeholder="Your birthdate"
-                [max]="maxDate"
-                ngModel
-                name="birthdate"
-                required
-                >
+            <input [matDatepicker]="picker" matInput placeholder="Your birthdate" [max]="maxDate" ngModel
+                name="birthdate" required>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <mat-checkbox
-            ngModel
-            name="agree"
-            color="primary"
-            required
-            >
+        <mat-checkbox ngModel name="agree" color="primary" required>
             Agree to Terms and Conditions</mat-checkbox>
-        <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Submit</button>
+        <button *ngIf="!isLoading" type="submit" mat-raised-button color="primary"
+            [disabled]="f.invalid">Submit</button>
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
     </form>
 </section>
-
-
