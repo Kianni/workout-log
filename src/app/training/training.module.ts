@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { SharedModule } from "../shared/shared.module";
 
 
 import { FlexLayoutModule } from "@angular/flex-layout";
@@ -22,11 +23,8 @@ import { StopTraningComponent } from "./current-training/stop-training.component
         StopTraningComponent
     ],
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MaterialModule,
-        FlexLayoutModule,
         AngularFirestoreModule,
+        SharedModule
     ],
     entryComponents: [StopTraningComponent]
 })
