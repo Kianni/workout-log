@@ -27,6 +27,7 @@ export class TrainingService {
                 .snapshotChanges()
                 .pipe(
                     map(docArray => {
+                        // throw (new Error());
                         return docArray.map(doc => {
                             const data: any = doc.payload.doc.data();
                             return {
@@ -40,6 +41,10 @@ export class TrainingService {
                         this.uiService.loadingStateChanged.next(false);
                         this.availableExercises = exercises;
                         this.exercisesChanged.next([...this.availableExercises]);
+                    }, error => {
+                        this.uiService.loadingStateChanged.next(false);
+                        this.uiService.showSnackbar('Fetching exercise failed, please try again later!', null, 3000);
+                        this.exercisesChanged.next(null);
                     }
                 )
         )
