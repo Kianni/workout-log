@@ -8,14 +8,12 @@ import * as UI from '../shared/ui.actions';
 import * as fromTraining from './training.reducer';
 import * as Training from './training.actions';
 import { Store } from '@ngrx/store';
-import { FormControlOptions } from "@angular/forms";
 
 
 
 @Injectable()
 export class TrainingService {
     private availableExercises: Exercise[] = [];
-    private runningExercise: Exercise;
     selectionMade = new Subject<Exercise>();
     exercisesChanged = new Subject<Exercise[]>();
     finishedExercisesChanged = new Subject<Exercise[]>();
@@ -45,14 +43,11 @@ export class TrainingService {
                     })
                 ).subscribe(
                     (exercises: Exercise[]) => {
-                        // this.uiService.loadingStateChanged.next(false);
+                        this.store.dispatch(new UI.StartLoading());
                         this.store.dispatch(new Training.SetAvailableTrainings(exercises));
-                        this.exercisesChanged.next([...this.availableExercises]);
                     }, error => {
-                        // this.uiService.loadingStateChanged.next(false);
                         this.store.dispatch(new UI.StopLoading());
                         this.uiService.showSnackbar('Fetching exercise failed, please try again later!', null, 3000);
-                        this.exercisesChanged.next(null);
                     }
                 )
         )
@@ -82,10 +77,9 @@ export class TrainingService {
                 calories: ex.calories * (progress / 100),
                 date: new Date(),
                 state: 'completed'
-            })
+            });
             this.store.dispatch(new Training.StopTraining());
         });
-        this.store.dispatch(new Training.StopTraining());
     }
 
     fetchCompletedOrCancelledExercises() {

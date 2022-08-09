@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
@@ -19,7 +19,6 @@ export class NewTrainingComponent implements OnInit {
   availableExercises$: Observable<Exercise[]>;
   selected;
   selectTrainingControl = new FormControl('', Validators.required);
-  private exerciseSubscription: Subscription;
   isLoading$: Observable<boolean>;
 
 
