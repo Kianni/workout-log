@@ -43,7 +43,7 @@ export class TrainingService {
                     })
                 ).subscribe(
                     (exercises: Exercise[]) => {
-                        this.store.dispatch(new UI.StartLoading());
+                        this.store.dispatch(new UI.StopLoading());
                         this.store.dispatch(new Training.SetAvailableTrainings(exercises));
                     }, error => {
                         this.store.dispatch(new UI.StopLoading());
